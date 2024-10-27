@@ -57,9 +57,10 @@ async function updateStatus() {
         
         if (response.success) {
             completionElement.textContent = '1';
-            // Unlock content or redirect as needed
-            if (localStorage.getItem('targetUrl')) {
-                window.location.href = localStorage.getItem('targetUrl');
+            // Redirect if target URL exists
+            const targetUrl = localStorage.getItem('targetUrl');
+            if (targetUrl) {
+                window.location.href = targetUrl;
             }
         }
     } catch (error) {
@@ -67,7 +68,7 @@ async function updateStatus() {
     }
 }
 
-// Poll status every 30 seconds
+// Check status every 30 seconds
 setInterval(updateStatus, 30000);
 
 export { renderOffers, updateStatus };

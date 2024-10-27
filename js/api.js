@@ -1,7 +1,7 @@
 const API_KEY = '28175|Y8x7HcsrLWySYJ9fUyesZPXVPYiMJAOd0b6iIhDB6a7b2514';
 const API_URL = 'https://unlockcontent.net/api/v2';
 const MAX_OFFERS = 5;
-const FEED_REPO = 'https://raw.githubusercontent.com/YOUR-USERNAME/feed-repo/main';
+const FEED_REPO = 'https://github.com/Offren/feed-generator-repo';
 
 const OFFER_TYPES = {
     CPI: 1,

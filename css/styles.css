@@ -1,0 +1,106 @@
+:root {
+    --custom-background-color: #141524;
+    --custom-foreground-color: #222339;
+    --custom-button-color-left: #01D676;
+    --custom-button-color-right: #0052ED;
+}
+
+body {
+    background-color: var(--custom-background-color);
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.content-locker {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.locker-container {
+    background-color: var(--custom-foreground-color);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(45deg, var(--custom-button-color-left), var(--custom-button-color-right));
+    color: white;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.content {
+    padding: 20px;
+    color: white;
+}
+
+.checker {
+    background: linear-gradient(45deg, var(--custom-button-color-left), var(--custom-button-color-right));
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+}
+
+.app {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.app:hover {
+    transform: translateY(-2px);
+}
+
+.incentive {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(45deg, var(--custom-button-color-left), var(--custom-button-color-right));
+    padding: 5px 15px;
+    border-radius: 15px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.offer-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.offer-type-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.offer-type-cpi { background-color: #4CAF50; color: white; }
+.offer-type-cpa { background-color: #2196F3; color: white; }
+.offer-type-pin { background-color: #FF9800; color: white; }
+.offer-type-vid { background-color: #9C27B0; color: white; }

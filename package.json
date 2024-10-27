@@ -1,0 +1,10 @@
+{
+  "name": "content-locker-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for content locker interface",
+  "scripts": {
+    "start": "python -m http.server"
+  },
+  "author": "",
+  "license": "MIT"
+}

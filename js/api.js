@@ -4,7 +4,13 @@ const RETRY_DELAY = 1000;
 
 async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...options.headers,
+                'Content-Type': 'application/json'
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -18,28 +24,15 @@ async function fetchWithRetry(url, options = {}, retries = MAX_RETRIES) {
     }
 }
 
-async function getVisitorIP() {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        console.error('Error getting IP:', error);
-        return null;
-    }
-}
-
 async function createSession(username, platform, followers) {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('platform', platform);
+    formData.append('followers', followers);
+
     return fetchWithRetry(`${API_URL}/session.php`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username,
-            platform,
-            followers
-        })
+        body: formData
     });
 }
 
@@ -52,11 +45,15 @@ async function checkStatus() {
 }
 
 async function recordClick(offerId, link) {
-    return fetchWithRetry(`${API_URL}/click.php?offer_id=${offerId}&link=${encodeURIComponent(link)}`);
+    const params = new URLSearchParams({
+        offer_id: offerId,
+        link: encodeURIComponent(link)
+    });
+    
+    return fetchWithRetry(`${API_URL}/click.php?${params}`);
 }
 
 export { 
-    getVisitorIP, 
     createSession, 
     fetchOffers, 
     checkStatus, 

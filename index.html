@@ -42,52 +42,37 @@
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://sdk.lockertools.ai/chat.js"></script>
     <script type="module">
-        import { fetchOffers, checkOfferCompletion, fetchFeeds } from './js/api.js';
-        import { renderOffers, renderFeeds } from './js/ui.js';
+        import { createSession } from './js/api.js';
+        import { renderOffers, updateStatus } from './js/ui.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check for completed offers
-            checkOfferCompletion();
-            
-            // Fetch and render feeds
-            const feeds = await fetchFeeds();
-            const feedItems = await renderFeeds(feeds);
-            
-            // Get URL parameters
-            const params = new URLSearchParams(window.location.search);
-            const targetClass = params.get('class');
-            const targetHash = params.get('hash');
-            
-            // Find the target item
-            const targetItem = feedItems.find(item => 
-                item.class === targetClass && item.hash === targetHash
-            );
-            
-            if (targetItem) {
-                // Store target URL for after offer completion
-                localStorage.setItem('targetUrl', targetItem.link);
-                
-                // Update UI with item details
-                document.getElementById('tool-title').textContent = targetItem.title;
-                document.getElementById('tool-description').textContent = targetItem.description;
-            }
-            
-            // Fetch and render offers
-            const offers = await fetchOffers();
-            await renderOffers(offers);
-        });
+            try {
+                // Get URL parameters
+                const params = new URLSearchParams(window.location.search);
+                const username = params.get('username');
+                const platform = params.get('platform');
+                const followers = parseInt(params.get('followers'), 10);
 
-        window.lockerAssistant = {
-            "color": "#222339",
-            "locker": {
-                "tool_name": "ContentLocker",
-                "slug": "preview",
-                "title": "Content Locked",
-                "description": "Complete one offer to unlock your content."
+                // Create or update session
+                if (username && platform && followers) {
+                    await createSession(username, platform, followers);
+                }
+
+                // Initial status check
+                await updateStatus();
+                
+                // Render offers
+                await renderOffers();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to initialize the application. Please try again later.',
+                    icon: 'error'
+                });
             }
-        };
+        });
     </script>
 </body>
 </html>

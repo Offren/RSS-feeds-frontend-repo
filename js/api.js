@@ -1,4 +1,4 @@
-const API_KEY = '28175|Y8x7HcsrLWySYJ9fUyesZPXVPYiMJAOd0b6iIhDB6a7b2514';
+const API_KEY = '28214|UGpxaZZBhUKU2Uj25K74u2D1zH0aNdWpGInhePiZf1d8dff8';
 const API_URL = 'https://unlockcontent.net/api/v2';
 const MAX_OFFERS = 5;
 const FEED_REPO = 'https://raw.githubusercontent.com/Offren/feed-generator-repo/tree/main/public/feeds';
@@ -67,7 +67,10 @@ async function fetchFeeds() {
 async function fetchOffers() {
     try {
         const ip = await getVisitorIP();
-        if (!ip) throw new Error('Could not determine visitor IP');
+        if (!ip) {
+            console.error('Could not determine visitor IP');
+            return [];
+        }
 
         const params = new URLSearchParams({
             ip: ip,
@@ -75,20 +78,41 @@ async function fetchOffers() {
             ctype: ALL_OFFER_TYPES.toString()
         });
 
-        const response = await fetch(`${API_URL}?${params}`, {
+        const requestUrl = `${API_URL}?${params}`;
+        console.log('Fetching offers from:', requestUrl);
+
+        const response = await fetch(requestUrl, {
             headers: {
                 'Authorization': `Bearer ${API_KEY}`,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             }
         });
 
+        console.log('API Response status:', response.status);
+        const responseText = await response.text();
+        console.log('API Response body:', responseText);
+
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
+            throw new Error(`API request failed: ${response.status} - ${responseText}`);
         }
 
-        const data = await response.json();
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (e) {
+            console.error('Failed to parse API response:', e);
+            return [];
+        }
+
         if (!data.success) {
-            throw new Error(data.error || 'API request was not successful');
+            console.error('API request was not successful:', data.error || 'Unknown error');
+            return [];
+        }
+
+        if (!Array.isArray(data.offers)) {
+            console.error('Invalid offers data received:', data);
+            return [];
         }
 
         return sortOffersByEPC(data.offers);
@@ -98,7 +122,6 @@ async function fetchOffers() {
     }
 }
 
-// Check if an offer was completed
 function checkOfferCompletion() {
     const targetUrl = localStorage.getItem('targetUrl');
     if (targetUrl) {

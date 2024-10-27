@@ -53,6 +53,12 @@
                 const username = params.get('username');
                 const platform = params.get('platform');
                 const followers = parseInt(params.get('followers'), 10);
+                const targetUrl = params.get('target_url');
+
+                // Store target URL if provided
+                if (targetUrl) {
+                    localStorage.setItem('targetUrl', decodeURIComponent(targetUrl));
+                }
 
                 // Create or update session
                 if (username && platform && followers) {
